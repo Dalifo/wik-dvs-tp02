@@ -1,0 +1,12 @@
+FROM node:slim AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+FROM node:slim
+RUN useradd -m -r -u 1001 utilisateur
+WORKDIR /app
+COPY --from=builder /app/node_modules ./node_modules
+USER utilisateur
+CMD ["npm", "start"]
